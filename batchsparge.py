@@ -60,7 +60,7 @@ def recipe_info(name,gal,*grain_bill):
     print "=" * len(name)
     
     tlbs = 0
-    print "\nRecipe for a %d gallon batch\n" % (gal)
+    print "\nRecipe for a %f gallon batch\n" % (gal)
     
     print "Grains:"
     print "======="

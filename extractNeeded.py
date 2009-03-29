@@ -12,7 +12,7 @@
 
 from brewconv import *
 
-MY_EFFICIENCY = 0.70
+MY_EFFICIENCY = 0.65
 
 DME_PPG = 42
 LME_PPG = 36
@@ -81,12 +81,12 @@ def lbs_needed_by_percent(tg,gal,*grains):
     tell me the amount I need in pounds."""
    lbs = []
    gu = sg_to_gu(tg)
+   gut = gu * gal #find the total points needed
    for i in grains:
        grain,percent = i
-#       pgu = gu * percent
-#       n = amount_needed(gu_to_sg(pgu), gal, float(grain))
-       n = amount_needed(tg, gal, float(grain))
-       lbs.append(n * percent)
+       ig = percent * gut #find the Ingredients gravity
+       ln = float_div(ig, float(grain)) #find the lbs needed
+       lbs.append(ln)
     
    return lbs
 
