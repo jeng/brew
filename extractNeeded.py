@@ -125,15 +125,10 @@ def sg_of_grain_bill(gal,*grain_bill):
     Ex. sg_to_grain_bill((TWO_ROW_PALE_ALE_MALT,7),
     (DARK_CRYSTAL_120L, 1.5), 5)"""
     
-    tp   = 0
-    tlbs = 0
+    tppg = 0
     for i in grain_bill:
         grain,lbs = i
-        ppg = float(grain)
-        tppg = ppg
-        tp = tp + (tppg * lbs)
-        tlbs = tlbs + lbs
+        ppg = float(grain) * lbs
+        tppg = tppg + ppg
 
-    avppg = float_div(tp,tlbs)
-
-    return gu_to_sg(float_div(tlbs * avppg, gal))
+    return gu_to_sg(float_div(tppg, gal))
