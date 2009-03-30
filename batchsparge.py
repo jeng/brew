@@ -11,6 +11,7 @@
 # Created: 26-March-2009 
 
 from brewconv import *
+from brewconst import *
 from extractNeeded import *
 
 def batch_sparge_nums(lbs,v):
@@ -51,36 +52,9 @@ def batch_sparge_info(lbs, v):
     print "Total amount of water needed %.4f gallons (or %.4f qt)" % (t, tq)
                    
 
-def recipe_info(name,gal,*grain_bill):
-    trube = 0.5
-    evph = 1 #evaperation rate per hour
-    boiltime = 1 #boil time in hours
+def strike_water_temp(lbs,mash_vol,mash_temp):
+    A = lbs * GRAIN_SHEAT_LBS
+    B = mash_vol
+    C = A + B
+    return ((C * mash_temp) - (A * GRAIN_TEMP)) / B
 
-    print name
-    print "=" * len(name)
-    
-    tlbs = 0
-    print "\nRecipe for a %f gallon batch\n" % (gal)
-    
-    print "Grains:"
-    print "======="
-    for i in grain_bill:
-        grain,lbs = i
-        tlbs = lbs + tlbs
-        
-    for i in grain_bill:
-        grain,lbs = i
-        ppg = float(grain)
-        p = int(float_div(lbs,tlbs) * 100)
-        ps = "%d%s"  % (p, '%')
-        lbss = "%.3f" % (lbs)
-        print "%s %s %s" % (str(grain).ljust(40,' '), lbss.rjust(7,' '), ps)
-        
-    sg = sg_of_grain_bill(gal,*grain_bill)
-    print "\nog: %s\n" % (round_sg(sg))
-
-    preboil = gal + trube + (boiltime * evph)
-    print "Batch Sparge Information"
-    print "========================"
-    print "Pre-Boil Volume: %.3f" % (preboil)
-    batch_sparge_info(tlbs, preboil)
