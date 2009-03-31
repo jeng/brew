@@ -115,3 +115,16 @@ def strike_water(lbs, mr=1.25):
     for a certain amount of grain. The default mash ratio is 1.25
     qt/lb. You can adjust this for a thicker or thinner mash."""
     return qt_to_gal(lbs * mr)
+
+def hour_to_min(hour):
+    return hour * 60
+
+def min_to_hour(min):
+    return float_div(min,60)
+
+
+def lbs_to_oz(lbs):
+    return lbs * 16
+
+def oz_to_lbs(oz):
+    return float_div(oz,16)
