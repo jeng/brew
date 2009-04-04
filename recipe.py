@@ -3,6 +3,7 @@ from ingredients import *
 from batchsparge import *
 from extractNeeded import *
 from brewconv import *
+from hops import *
 
 class Recipe:
     def __init__(self, name="", tg=0.0, boiltime=1, grain_bill=[], vol=5, mash_temp=153, hops=[], yeast=[]):
@@ -72,11 +73,11 @@ class Recipe:
                                     ps.rjust(7,' '))
         
         sg = sg_of_grain_bill(self.vol,self.grain_bill)        
-        print "\nog: %s" % (round_sg(sg))
+        print "\nog: %s (%d Plato)" % (round_sg(sg), sg_to_plato(sg))
 
         preboil = self.vol + trube + (self.boiltime * EVPH)
         bog = sg_of_grain_bill(preboil, self.grain_bill)
-        print "bg: %s for %f gallons\n" % (round_sg(bog),preboil)
+        print "bg: %s (%d Plato) for %f gallons\n" % (round_sg(bog),sg_to_plato(bog),preboil)
 
         print "Hops:"
         print "====="
@@ -98,11 +99,14 @@ class Recipe:
             
 
         sw, br, hv = batch_sparge_nums(tlbs,self.vol)
-        print "\nBatch Sparge Information:"
+        print "\nBrewing Instructions:"
         print "========================="
+        print "Using the batch sparge method."
+        print "Mash at %3.2fF (%3.2fC) until complete." % (self.mash_temp, fah_to_cel(self.mash_temp))
         swt = strike_water_temp(tlbs, sw, self.mash_temp)
         print "Strike water temperature %3.1fF or %3.1fC" % (swt, fah_to_cel(swt))
         print "Pre-Boil Volume: %.3f" % (preboil)
+        print "Length of the boil: %.3f hours" % (self.boiltime)
         batch_sparge_info(tlbs, preboil)
 
         
@@ -126,7 +130,7 @@ TittabawaseeBrownAle = Recipe(name="Tittabawasee Brown Ale", tg=1.050, boiltime=
                               yeast = ["Coopers Ale", "Yeast Lab Australian Ale"])
 
 GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=1, vol=5, mash_temp=154,
-                              grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, percent=1.00)],
+                              grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, lbs=8)],
                               hops = [HopAddition(FUGGLES, 1.00, 60),
                                       HopAddition(FUGGLES, 1.00, 15)],
                               yeast = ["WLP002", "Safale-04"])
