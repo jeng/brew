@@ -4,6 +4,7 @@ from batchsparge import *
 from extractNeeded import *
 from brewconv import *
 from hops import *
+from report import runReport
 
 class Recipe:
     def __init__(self, name="", tg=0.0, boiltime=1, grain_bill=[], vol=5, mash_temp=153, hops=[], yeast=[]):
@@ -43,15 +44,11 @@ class Recipe:
             raise "We needed some grains for the recipe."
     
         trube = 0.5
-        
-        print self.name
-        print "=" * len(self.name)
-    
+        text = '*%s\n' % (self.name)
 
-        print "\nRecipe for a %f gallon batch\n" % (self.vol)
+        text = text +  "\nRecipe for a %f gallon batch\n" % (self.vol)
     
-        print "Grains:"
-        print "======="
+        text = text + "\n+Grains\n\n"
 
         if self.grain_bill[0].percent > 0:
             if self.tg == 0:
@@ -67,48 +64,60 @@ class Recipe:
             ps = "%3.3f%s"  % (p, '%')
             lbss = "%.3f" % (i.lbs)
             ozs  = "%5.3f" % (lbs_to_oz(i.lbs))
-            print "%s %s %s  %s" % (str(i.grain).ljust(40,' '),
-                                    lbss.rjust(7,' ') + ' lbs',
-                                    ozs.rjust(9,' ') + ' oz',
-                                    ps.rjust(7,' '))
+            text = text +  "|%s|%s|%s|%s|\n" % (str(i.grain),
+                                                lbss + ' lbs',
+                                                ozs + ' oz',
+                                                ps)
         
         sg = sg_of_grain_bill(self.vol,self.grain_bill)        
-        print "\nog: %s (%d Plato)" % (round_sg(sg), sg_to_plato(sg))
+        text = text + "\nog: %s (%d Plato)\n" % (round_sg(sg), sg_to_plato(sg))
 
         preboil = self.vol + trube + (self.boiltime * EVPH)
         bog = sg_of_grain_bill(preboil, self.grain_bill)
-        print "bg: %s (%d Plato) for %f gallons\n" % (round_sg(bog),sg_to_plato(bog),preboil)
+        text = text + "bg: %s (%d Plato) for %f gallons\n" % (round_sg(bog),sg_to_plato(bog),preboil)
 
-        print "Hops:"
-        print "====="
+        text = text + "\n+Hops\n\n"
 
         tibu = 0.0
         
         for i in self.hops:
             n = ibu(i.woz, i.hop.aa, bog, i.time, self.vol)
-            print "%s IBU %d" %( str(i), n)
+            text = text + "%s IBU|%d|\n" %( str(i), n)
             tibu = n + tibu
 
-        print "Total IBUs = %5.3f" % (tibu)
+        text = text + "Total IBUs = %5.3f\n" % (tibu)
 
-        print "\nYeast:"
-        print "======"
+        text = text + "\n+Yeast\n\n"
 
         for i in self.yeast:
-            print i
+            text = text + i + '\n'
             
 
         sw, br, hv = batch_sparge_nums(tlbs,self.vol)
-        print "\nBrewing Instructions:"
-        print "========================="
-        print "Using the batch sparge method."
-        print "Mash at %3.2fF (%3.2fC) until complete." % (self.mash_temp, fah_to_cel(self.mash_temp))
+        text = text + "\n+Brewing Instructions\n\n"
+        text = text + "Using the batch sparge method.\n"
+        text = text + "Mash at %3.2fF (%3.2fC) until complete.\n" % (self.mash_temp, fah_to_cel(self.mash_temp))
         swt = strike_water_temp(tlbs, sw, self.mash_temp)
-        print "Strike water temperature %3.1fF or %3.1fC" % (swt, fah_to_cel(swt))
-        print "Pre-Boil Volume: %.3f" % (preboil)
-        print "Length of the boil: %.3f hours" % (self.boiltime)
-        batch_sparge_info(tlbs, preboil)
+        text = text + "Strike water temperature %3.1fF or %3.1fC\n" % (swt, fah_to_cel(swt))
+        text = text + "Pre-Boil Volume: %.3f\n" % (preboil)
+        text = text + "Length of the boil: %.3f hours\n" % (self.boiltime)
 
+        sw, br, hv = batch_sparge_nums(tlbs,preboil)
+        
+        swq = gal_to_qt(sw)
+        hvq = gal_to_qt(hv)
+        brq = gal_to_qt(br)
+        
+        t   = sw + hv + br
+        tq  = gal_to_qt(t)
+
+        text = text +  "You will need %.4f gallons (or %.4f qt) of strike water.\n" % (sw, swq)
+        text = text +  "You will need to add %.4f gallons (or %.4f qt) of water before the runoff.\n" % (br, brq)
+        text = text +  "You will need %.4f gallons (or %.4f qt) of sparge water.\n" % (hv, hvq)
+        text = text +  "Total amount of water needed %.4f gallons (or %.4f qt)\n" % (t, tq)
+
+        runReport('pdf', text=text, filename='%s.pdf' % (self.name.replace(" ", "-")))
+#        runReport('txt', text=text)
         
 BrewchezBitter = Recipe(name="Brewchez Bitter", tg=1.044, boiltime=1, vol=5.5, mash_temp=154,
                         grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, percent=0.90),
@@ -134,4 +143,5 @@ GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=
                               hops = [HopAddition(FUGGLES, 1.00, 60),
                                       HopAddition(FUGGLES, 1.00, 15)],
                               yeast = ["WLP002", "Safale-04"])
-                              
+
+test = GoldenSlumbersBitter

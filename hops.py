@@ -56,13 +56,12 @@ class HopAddition:
         self.time = time
 
     def __str__(self):
-        sn  = self.hop.name.ljust(30,' ')
+        sn  = self.hop.name
         so  = '%3.3f oz'   % (self.woz)
         sa  = '%3.3f%s aa' % (self.hop.aa * 100, '%')
         sau = '%5.3f aau'  % (self.aau)
         sm  = '@ %4d min'  % (self.time)
-        return '%s %s %s %s %s' % (sn, so.rjust(11,' '), sa.rjust(12,' '),
-                                   sau.rjust(14,' '), sm.rjust(11,' '))
+        return '|%s|%s|%s|%s %s|' % (sn, so, sa, sau, sm)
 
 class Hop:
     def __init__ (self,name, aa):
