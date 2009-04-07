@@ -59,7 +59,7 @@ def writeTable(c, table, line):
             s1 = ("%s %d") % (s1, width)
             c.drawString(int(x), line, cell)
             x = x + width
-        print "Widths %s" % (s1)
+#        print "Widths %s" % (s1)
     return line
 
 def getCmd(sl):
