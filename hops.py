@@ -1,4 +1,4 @@
-# Copyright © 2009 Jeremy English <jhe@jeremyenglish.org>
+# Copyright (c) 2009 Jeremy English <jhe@jeremyenglish.org>
 
 # Permission to use, copy, modify, distribute, and sell this software
 # and its documentation for any purpose is hereby granted without fee,

@@ -1,4 +1,4 @@
-# Copyright © 2009 Jeremy English <jhe@jeremyenglish.org>
+# Copyright (c) 2009 Jeremy English <jhe@jeremyenglish.org>
 
 # Permission to use, copy, modify, distribute, and sell this software
 # and its documentation for any purpose is hereby granted without fee,
@@ -11,6 +11,9 @@
 # Created: 06-April-2009 
 
 from recipe import Recipe
+from grains import *
+from hops import *
+from ingredients import *
 
 BrewchezBitter = Recipe(name="Brewchez Bitter", tg=1.044, boiltime=1, vol=5.5, mash_temp=154,
                         grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, percent=0.90),
