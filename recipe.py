@@ -7,7 +7,8 @@ from hops import *
 from report import runReport
 
 class Recipe:
-    def __init__(self, name="", tg=0.0, boiltime=1, grain_bill=[], vol=5, mash_temp=153, hops=[], yeast=[]):
+    def __init__(self, name="", tg=0.0, boiltime=1, grain_bill=[], vol=5, 
+                 mash_temp=153, hops=[], yeast=[], notes=""):
         self.tg = tg
         self.grain_bill = grain_bill
         self.vol = vol
@@ -16,6 +17,7 @@ class Recipe:
         self.mash_temp = mash_temp
         self.hops = hops
         self.yeast = yeast
+        self.notes = notes
 
     def add_to_grain_bill(self,ingredient):
         self.grain_bill.append(ingredient)
@@ -95,13 +97,8 @@ class Recipe:
 
         sw, br, hv = batch_sparge_nums(tlbs,self.vol)
         text = text + "\n+Brewing Instructions\n\n"
-        text = text + "Using the batch sparge method.\n"
-        text = text + "Mash at %3.2fF (%3.2fC) until complete.\n" % (self.mash_temp, fah_to_cel(self.mash_temp))
-        swt = strike_water_temp(tlbs, sw, self.mash_temp)
-        text = text + "Strike water temperature %3.1fF or %3.1fC\n" % (swt, fah_to_cel(swt))
-        text = text + "Pre-Boil Volume: %.3f\n" % (preboil)
-        text = text + "Length of the boil: %.3f hours\n" % (self.boiltime)
 
+        swt = strike_water_temp(tlbs, sw, self.mash_temp)
         sw, br, hv = batch_sparge_nums(tlbs,preboil)
         
         swq = gal_to_qt(sw)
@@ -111,10 +108,22 @@ class Recipe:
         t   = sw + hv + br
         tq  = gal_to_qt(t)
 
-        text = text +  "You will need %.4f gallons (or %.4f qt) of strike water.\n" % (sw, swq)
-        text = text +  "You will need to add %.4f gallons (or %.4f qt) of water before the runoff.\n" % (br, brq)
+        text = text +  "You will need %.4f gallons (or %.4f qt) of \
+%3.1fF or %3.1fC strike water.\n" % (sw, swq, swt, fah_to_cel(swt))
+        text = text + "Mash at %3.2fF (%3.2fC) until complete.\n" % (self.mash_temp, fah_to_cel(self.mash_temp))
+
+        text = text + "\nUsing the batch sparge method.\n"
+        text = text +  "You will need to add %.4f gallons \
+(or %.4f qt) of water before the runoff.\n" % (br, brq)
         text = text +  "You will need %.4f gallons (or %.4f qt) of sparge water.\n" % (hv, hvq)
-        text = text +  "Total amount of water needed %.4f gallons (or %.4f qt)\n" % (t, tq)
+        text = text + "\nPre-Boil Volume: %.3f\n" % (preboil)
+        text = text + "Length of the boil: %.3f hours\n" % (self.boiltime)
+
+        text = text +  "\nTotal amount of water needed %.4f gallons (or %.4f qt)\n" % (t, tq)
+        text = text + "\n+Notes\n\n"
+
+        for i in self.notes.split('\n'):
+            text = text + i.strip() + '\n'
 
         runReport('pdf', text=text, filename='%s.pdf' % (self.name.replace(" ", "-")))
 #        runReport('txt', text=text)
@@ -145,3 +154,22 @@ GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=
                               yeast = ["WLP002", "Safale-04"])
 
 test = GoldenSlumbersBitter
+
+###
+MooseDrool = Recipe(name="Moose Drool", tg=1.052, boiltime=1.16, vol=5.5, mash_temp=154,
+                    grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, percent=0.8689),
+                                  Ingredient(DARK_CRYSTAL_120L, percent=0.1006),
+                                  Ingredient(CHOCOLATE_MALT, percent=0.0282),
+                                  Ingredient(BLACK_PATENT_MALT, percent=0.0024)],
+                    hops = [HopAddition(KENT_GOLDINGS, 1.04, 60),
+                            HopAddition(WILLAMETTE, 0.60, 10),
+                            HopAddition(LIBERTY, 0.60, 1)],
+                    yeast = ["White Labs #WLP002 66 oz Stater"],
+                    notes = """The Can You Brew It recipes follow the same rules as the Previous 
+                               Jamil Show recipes and the recipes in Brewing Classic Styles. 70%
+                               efficiency, 6 gallons at the end of boil, rager for hops, hop pellets, 
+                               etc. All in the book around page 41.""")
+
+
+
+
