@@ -37,15 +37,22 @@ class Table:
         self.tablePad = 2
         for i in rows:
             fontName,fontSize,ident = cmdFonts('')
-            wd = c.stringWidth(i + (self.tablePad*'W'), fontName, fontSize)
+            if self.c is None:
+                wd = len(i) + self.tablePad
+            else:
+                wd = c.stringWidth(i + (self.tablePad*'W'), fontName, fontSize)
             self.rowWidths.append(wd)
 
     def addRow(self,row):
         self.rows.append(row)
-        for i in range(len(row)):
+        for i,cellinfo in enumerate(zip(self.rowWidths,row)):
+            width,cell = cellinfo
             fontName,fontSize,ident = cmdFonts('')
-            wd = self.c.stringWidth(row[i] + (self.tablePad*'W'), fontName, fontSize)
-            self.rowWidths[i] = max(self.rowWidths[i], wd)
+            if self.c is None:
+                wd = len(cell) + self.tablePad
+            else:
+                wd = self.c.stringWidth(cell + (self.tablePad*'W'), fontName, fontSize)
+            self.rowWidths[i] = max(width, wd)
 
 def writeTable(c, table, line):
 
@@ -68,7 +75,7 @@ def getCmd(sl):
     else:
         return ''
 
-def procTableCmd(sl, table, c):
+def procTableCmd(sl, table, c=None):
     row = sl.split('|')[1:-1]
     if table == None:
         table = Table(c,row)
@@ -118,8 +125,107 @@ def createPdf(filename, text):
     c.save()
 
 def createTxt(text):
-    for line in text.split('\n'):
-        print line
+    """Parse the text and write it stdout."""
+    table = None
+    for t in text.split('\n'):
+        sl = t.strip()
+        cmd = getCmd(sl)
+        if cmd == '|':
+            table = procTableCmd(sl, table)
+        else:
+            ident = 4
+            if table:
+                for row in table.rows:
+                    s1 = ' '*ident
+                    for width,cell in zip(table.rowWidths, row):
+                        s1 = s1 + cell.ljust(width,' ')
+                    print s1
+                table = None
+                
+            if cmd == '*':
+                s = sl.strip(cmd).strip()
+                print s
+                print '='*len(s)
+            elif cmd == '+':
+                s = sl.strip(cmd).strip()
+                print s
+                print '-'*len(s)
+            else:
+                print ' '*ident + sl
+
+def createHtml(filename, text):
+    f = open(filename,'w')
+    f.write('''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">''')
+
+    f.write('<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">')
+
+    f.write('<head>')
+    f.write('''<style type="text/css">
+    body{
+    margin-left: 20%;
+    margin-top: 5%;
+    }
+    p{
+    margin-left:2%;
+    }
+    table{
+    margin-left:2%;
+    width: 80%
+    }
+    </style>''')
+
+    f.write('<title>%s</title>' % (filename))
+    f.write('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />')
+    f.write('</head>')
+
+    f.write('<body>')
+
+    inP = False
+
+    def canP(inP):
+        if inP:
+            f.write('</p>')
+        return False
+
+    table = None
+    for t in text.split('\n'):
+        sl = t.strip()
+        cmd = getCmd(sl)
+        if cmd == '|':
+            table = procTableCmd(sl, table)
+        else:
+            ident = 4
+            if table:
+                inP = canP(inP)
+                f.write('<table>')
+                for row in table.rows:
+                    f.write('<tr>')
+                    for cell in row:
+                        f.write('<td>%s</td>' % (cell))
+                    f.write('</tr>')
+                f.write('</table>')
+                table = None
+                
+            if cmd == '*':
+                s = sl.strip(cmd).strip()
+                inP = canP(inP)
+                f.write('<h1>%s</h1>' % (s))
+            elif cmd == '+':
+                s = sl.strip(cmd).strip()
+                inP = canP(inP)
+                f.write('<h2>%s</h2>' % (s))
+            else:
+                if not inP:
+                    inP = True
+                    f.write('<p>')
+
+                f.write('%s<br/>' % sl)
+
+    inP = canP(inP)
+    f.write('</body>')
+    f.write('</html>')
+    f.close()
 
 def runReport(reportType, text="", filename=None):
     if reportType == 'pdf':
@@ -127,9 +233,46 @@ def runReport(reportType, text="", filename=None):
                   text)
     elif reportType == 'txt':
         createTxt(text)
+    elif reportType == 'html':
+        createHtml(filename, text)
 
 def pdfTest():
     createPdf("test.pdf",
+              """*This is a header
+              This a line below the header
+              This is another line
+              +Header number 2
+              Yes some more lines
+              +insert a table
+              |foo1|1|2|3|
+              |bar|4|5|6|
+              |baz|7|8|9|
+              +yow
+              |the|second|table|
+              |0|1|2|
+              |3|4|5|
+              |6|7|8|
+              """)
+
+def txtTest():
+    createTxt("""*This is a header
+              This a line below the header
+              This is another line
+              +Header number 2
+              Yes some more lines
+              +insert a table
+              |foo1|1|2|3|
+              |bar|4|5|6|
+              |baz|7|8|9|
+              +yow
+              |the|second|table|
+              |0|1|2|
+              |3|4|5|
+              |6|7|8|
+              """)
+
+def htmlTest():
+    createHtml("test.html",
               """*This is a header
               This a line below the header
               This is another line

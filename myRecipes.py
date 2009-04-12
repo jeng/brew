@@ -38,7 +38,10 @@ GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=
                               grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, lbs=8)],
                               hops = [HopAddition(FUGGLES, 1.00, 60),
                                       HopAddition(FUGGLES, 1.00, 15)],
-                              yeast = ["WLP002", "Safale-04"])
+                              yeast = ["WLP002", "Safale-04"],
+                              notes ="""This is my first recipe. Trying to be dead simple and to brew a
+                              summer bitter. This is also going to be my first all grain brew. Another
+                              reason to keep it simple.""")
 
 MooseDrool = Recipe(name="Moose Drool", tg=1.052, boiltime=1.16, vol=5.5, mash_temp=154,
                     grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, percent=0.8689),
