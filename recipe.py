@@ -10,7 +10,7 @@
 
 # Created: 06-April-2009 
 
-
+from brewconst import *
 from grains import *
 from ingredients import *
 from batchsparge import *

@@ -128,3 +128,9 @@ def lbs_to_oz(lbs):
 
 def oz_to_lbs(oz):
     return float_div(oz,16)
+
+def gallon_to_liters(gal):
+    return gal * 3.7854118
+
+def liters_to_gallon(liters):
+    return liters/3.7854118
