@@ -114,7 +114,7 @@ class Recipe:
             else:
                 grams, starter = i.amount_needed(sg, self.vol)
                 text = text + '%.3fg||' % (grams) #no starter for dry yeast
-            text = text + '\n'
+            text = text + '%d-%dF|\n' %(i.lowTemp, i.highTemp)
 
         sw, br, hv = batch_sparge_nums(tlbs,self.vol)
         text = text + "\n+Brewing Instructions\n\n"

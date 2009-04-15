@@ -25,7 +25,7 @@ BrewchezBitter = Recipe(name="Brewchez Bitter", tg=1.044, boiltime=1, vol=5.5, m
                                 HopAddition(KENT_GOLDINGS, 0.5, 30),
                                 HopAddition(KENT_GOLDINGS, 0.5, 10),
                                 HopAddition(KENT_GOLDINGS, 0.25, 1)],
-                        yeast = ['WLP002', 'Safale-04'])
+                        yeast = [WLP002, SAFALE_04])
     
 TittabawaseeBrownAle = Recipe(name="Tittabawasee Brown Ale", tg=1.050, boiltime=1, vol=5, mash_temp=154,
                               grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, percent=0.85),
@@ -34,7 +34,7 @@ TittabawaseeBrownAle = Recipe(name="Tittabawasee Brown Ale", tg=1.050, boiltime=
                               hops = [HopAddition(Hop('Nugget',0.10), 0.5, 60),
                                       HopAddition(Hop('Willamette',0.05), 0.75, 30),
                                       HopAddition(Hop('Willamette',0.05), 0.75, 15)],
-                              yeast = ["Coopers Ale", "Yeast Lab Australian Ale"])
+                              yeast = [COOPERS_ALE, WLP009])
 
 GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=1, vol=5, mash_temp=154,
                               grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, lbs=8)],
@@ -53,7 +53,7 @@ MooseDrool = Recipe(name="Moose Drool", tg=1.052, boiltime=1.16, vol=5.5, mash_t
                     hops = [HopAddition(KENT_GOLDINGS, 1.04, 60),
                             HopAddition(WILLAMETTE, 0.60, 10),
                             HopAddition(LIBERTY, 0.60, 1)],
-                    yeast = ["White Labs #WLP002 66 oz Stater"],
+                    yeast = [WLP002],
                     notes = """The Can You Brew It recipes follow the same rules as the Previous 
                                Jamil Show recipes and the recipes in Brewing Classic Styles. 70%
                                efficiency, 6 gallons at the end of boil, rager for hops, hop pellets, 
