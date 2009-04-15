@@ -36,3 +36,28 @@ def grams_dry_yeast(sg, vol, yeastType='ale'):
     """Return the number of grams of dry yeast needed assuming 20
     billion viable cells per gram."""
     return pitching_rate(sg, vol, yeastType) / 20000000000
+
+class Yeast:
+    def __init__(self,name, type, liquid, lowTemp=65, highTemp=75):
+        self.name = name
+        self.type = type
+        self.liquid = liquid
+        self.lowTemp = lowTemp
+        self.highTemp = highTemp
+
+    def cells_needed(self,sg,vol):
+        return pitching_rate(sg, vol, yeastType=self.type)
+
+    def amount_needed(self,sg,vol):
+        if self.liquid:
+            return (number_of_yeast_tubes(sg,vol,yeastType=self.type), starter_size(sg,vol,yeastType=self.type))
+        else:
+            return (grams_dry_yeast(sg,vol,yeastType=self.type), 0) #no starter for dry yeast
+
+    def __str__(self):
+        return self.name
+
+WLP002 = Yeast('English Ale WLP002', 'ale', True)
+SAFALE_04 = Yeast('Safale-04', 'ale', False)
+COOPERS_ALE = Yeast('Coopers Ale', 'ale', False)
+

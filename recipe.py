@@ -18,6 +18,7 @@ from extractNeeded import *
 from brewconv import *
 from hops import *
 from report import runReport
+from yeast import *
 
 class Recipe:
     def __init__(self, name="", tg=0.0, boiltime=1, grain_bill=[], vol=5, 
@@ -54,7 +55,7 @@ class Recipe:
             tlbs = i.lbs + tlbs
         return tlbs
 
-    def report(self):
+    def report(self, type='pdf'):
         if len(self.grain_bill) <= 0:
             raise "We needed some grains for the recipe."
     
@@ -105,8 +106,15 @@ class Recipe:
         text = text + "\n+Yeast\n\n"
 
         for i in self.yeast:
-            text = text + i + '\n'
-            
+            text = text + '|' + str(i) + '|'
+            text = text + '%dB cells|' % (i.cells_needed(sg, self.vol)/1000000000)
+            if i.liquid:
+                tubes, starter = i.amount_needed(sg, self.vol)
+                text = text + '%.3f tubes| %dL starter|'% (tubes, starter)
+            else:
+                grams, starter = i.amount_needed(sg, self.vol)
+                text = text + '%.3fg||' % (grams) #no starter for dry yeast
+            text = text + '\n'
 
         sw, br, hv = batch_sparge_nums(tlbs,self.vol)
         text = text + "\n+Brewing Instructions\n\n"
@@ -138,7 +146,7 @@ class Recipe:
         for i in self.notes.split('\n'):
             text = text + i.strip() + '\n'
 
-        runReport('pdf', text=text, filename='%s.pdf' % (self.name.replace(" ", "-")))
+        runReport(type, text=text, filename='%s.%s' % (self.name.replace(" ", "-"),type))
         
 
 
