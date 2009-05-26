@@ -1,0 +1,17 @@
+This is a python program that will create homebrew recipes from simple
+parameters such as target gravity, grain bill by percent, hops and
+yeast.  It calculates IBUs, Grain amounts, yeast amounts and water
+volumes. It can produce three types of reports, text, html and
+pdf. Here are two example reports:
+
+   - http://www.jeremyenglish.org/docs/Moose-Drool.pdf
+   - http://www.jeremyenglish.org/docs/Golden-Slumbers-Bitter.html
+
+The program uses reportlab to generate the pdf.
+
+To see how the program works check the file myRecipes.py. Hopefully, it is
+self explanitory if not send me an email at jhe@jeremyenglish.org
+
+I probable will not be working on this program anymore.  If someone
+would like to take the code and run with it please do.  If you do
+decide to work on it please give it a better name ;)
