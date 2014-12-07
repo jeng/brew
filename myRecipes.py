@@ -36,7 +36,7 @@ TittabawaseeBrownAle = Recipe(name="Tittabawasee Brown Ale", tg=1.050, boiltime=
                                       HopAddition(Hop('Willamette',0.05), 0.75, 15)],
                               yeast = [COOPERS_ALE, WLP009])
 
-GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=1, vol=5, mash_temp=154,
+GoldenSlumbersBitter = Recipe(name="Golden Slumbers Bitter", tg=1.035, boiltime=1, vol=5.5, mash_temp=154,
                               grain_bill = [Ingredient(TWO_ROW_PALE_ALE_MALT, lbs=8)],
                               hops = [HopAddition(FUGGLES, 1.00, 60),
                                       HopAddition(FUGGLES, 1.00, 1)],
