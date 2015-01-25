@@ -10,7 +10,18 @@
 
 # Created: 26-March-2009 
 
-EVPH = 1 #evaperation rate per hour
-MY_EFFICIENCY = 0.65
-GRAIN_TEMP = 70 #Assume room temprature of 70F
-GRAIN_SHEAT_LBS = 0.05 #Specific heat for 1 pound of grain
+class BrewConst:
+    def __init__(self, evph=1, efficiency = 0.65,
+            grain_temp = 70, grain_sheat_lbs = 0.05,
+            mash_ratio=1.25):
+        """ EVPH evaporation rate per hour in gallons. EFFICIENCY efficiency of the brew setup,
+            GRAIN_TEMP default room temperature of 70F, GRAIN_SHEAT_LBS Specific heat for 1 pound
+            of grain. The default mash ratio is 1.25 qt/lb. You can adjust this for a thicker
+            or thinner mash. """
+        self.evph = evph
+        self.efficiency = efficiency
+        self.grain_temp = grain_temp
+        self.grain_sheat_lbs = grain_sheat_lbs
+        self.mash_ratio = mash_ratio
+
+DEF_BREW_CONST = BrewConst()

@@ -14,19 +14,26 @@ from brewconv import *
 from brewconst import *
 from extractNeeded import *
 
-def batch_sparge_nums(lbs,v):
+def batch_sparge_nums(lbs, v, brew_const=DEF_BREW_CONST):
     """Given the amount of grains to use in pounds and the pre-boil
     volume in gallons this function will return the amount of strike
     water, water to add before first runnings and the amount of sparge
     water to use to get your target volume. In that order."""
     hv = float_div(v,2)
-    sw = strike_water(lbs)
+    sw = strike_water(lbs, mash_ratio=brew_const.mash_ratio)
 
     #Amount of water left after the mash
-    am = grain_absortion(sw, lbs)
+    am = grain_absorption(sw, lbs)
 
     #Amount to add before the run off
+    #We want to reach half of the target volume.
     br = hv - am
+
+    #if we have more than half of our target volume left
+    #then adjust our sparge water
+    if br < 0:
+        br = 0
+        hv = v - am
 
     return (sw, br, hv)
     
@@ -52,9 +59,9 @@ def batch_sparge_info(lbs, v):
     print "Total amount of water needed %.4f gallons (or %.4f qt)" % (t, tq)
                    
 
-def strike_water_temp(lbs,mash_vol,mash_temp):
-    A = lbs * GRAIN_SHEAT_LBS
-    B = mash_vol
-    C = A + B
-    return ((C * mash_temp) - (A * GRAIN_TEMP)) / B
+def strike_water_temp(lbs,mash_vol,mash_temp, brew_const=DEF_BREW_CONST):
+    a = lbs * brew_const.grain_sheat_lbs
+    b = mash_vol
+    c = a + b
+    return ((c * mash_temp) - (a * brew_const.grain_temp)) / b
 

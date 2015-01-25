@@ -22,7 +22,8 @@ from yeast import *
 
 class Recipe:
     def __init__(self, name="", tg=0.0, boiltime=1, grain_bill=[], vol=5, 
-                 mash_temp=153, hops=[], yeast=[], notes=""):
+                 mash_temp=153, hops=[], yeast=[], notes="", trub=0.5,
+                 brew_const = DEF_BREW_CONST):
         self.tg = tg
         self.grain_bill = grain_bill
         self.vol = vol
@@ -32,6 +33,8 @@ class Recipe:
         self.hops = hops
         self.yeast = yeast
         self.notes = notes
+        self.trub = trub
+        self.brew_const = brew_const
 
     def add_to_grain_bill(self,ingredient):
         self.grain_bill.append(ingredient)
@@ -59,7 +62,7 @@ class Recipe:
         if len(self.grain_bill) <= 0:
             raise "We needed some grains for the recipe."
     
-        trube = 0.5
+        trub = self.trub
         text = '*%s\n' % (self.name)
 
         text = text +  "\nRecipe for a %f gallon batch\n" % (self.vol)
@@ -84,11 +87,12 @@ class Recipe:
                                                 lbss + ' lbs',
                                                 ozs + ' oz',
                                                 ps)
-        
+
+        text = text + "total lbs: %f\n" % tlbs
         sg = sg_of_grain_bill(self.vol,self.grain_bill)        
         text = text + "\nog: %s (%d Plato)\n" % (round_sg(sg), sg_to_plato(sg))
 
-        preboil = self.vol + trube + (self.boiltime * EVPH)
+        preboil = self.vol + trub + (self.boiltime * self.brew_const.evph)
         bog = sg_of_grain_bill(preboil, self.grain_bill)
         text = text + "bg: %s (%d Plato) for %f gallons\n" % (round_sg(bog),sg_to_plato(bog),preboil)
 
@@ -119,7 +123,7 @@ class Recipe:
         sw, br, hv = batch_sparge_nums(tlbs,self.vol)
         text = text + "\n+Brewing Instructions\n\n"
 
-        swt = strike_water_temp(tlbs, sw, self.mash_temp)
+        swt = strike_water_temp(tlbs, sw, self.mash_temp, brew_const=self.brew_const)
         sw, br, hv = batch_sparge_nums(tlbs,preboil)
         
         swq = gal_to_qt(sw)
@@ -147,7 +151,4 @@ class Recipe:
             text = text + i.strip() + '\n'
 
         runReport(type, text=text, filename='%s.%s' % (self.name.replace(" ", "-"),type))
-        
-
-
 

@@ -96,9 +96,9 @@ def water_weight(gal):
     15.5C."""
     return gal * 8.338
 
-def grain_absortion(gal,lbs,ar=0.1):
+def grain_absorption(gal,lbs,ar=0.1):
     """Returns the amount of water left after some is absorbed by so
-    many pounds of grain. You can pass an absortion rate but the
+    many pounds of grain. You can pass an absorption rate but the
     default is 0.1."""
     return gal - (lbs * ar)
 
@@ -110,11 +110,11 @@ def gal_to_qt(gal):
     """Convert from gallons to quarts."""
     return gal * 4
 
-def strike_water(lbs, mr=1.25):
+def strike_water(lbs, mash_ratio=1.25):
     """Returns the amount of strike water, in gallons, that you need
     for a certain amount of grain. The default mash ratio is 1.25
     qt/lb. You can adjust this for a thicker or thinner mash."""
-    return qt_to_gal(lbs * mr)
+    return qt_to_gal(lbs * mash_ratio)
 
 def hour_to_min(hour):
     return hour * 60

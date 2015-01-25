@@ -16,9 +16,9 @@ class Ingredient:
     """Class used to define the ingredients (grains) for a recipe.
     When creating the ingredient you can specify the amounts in
     prectange or poinds."""
-    def __init__(self, grain, percent=0.0, lbs=0):
-        if not isinstance(grain, Grains):
+    def __init__(self, grain, percent=0.0, lbs=0, brew_const=DEF_BREW_CONST):
+        if not isinstance(grain, Grain):
             raise TypeError, "grain must be an instance of a Grain object."
-        self.grain = grain
+        self.grain = Grain(grain.ppg, grain.des, brew_const=brew_const)
         self.percent = percent
         self.lbs = lbs

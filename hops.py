@@ -75,6 +75,8 @@ class HopAddition:
         sm  = '@ %4d min'  % (self.time)
         return '|%s|%s|%s|%s %s|' % (sn, so, sa, sau, sm)
 
+    def ibu(self, og, vol):
+        return ibu(self.woz, self.hop.aa, og, self.time, vol)
 class Hop:
     def __init__ (self,name, aa):
         """Pass in the name of the hop and the Alpha Acid percent
@@ -93,6 +95,7 @@ CASCADE               = Hop("Cascade", 0.06)
 CENTENNIAL            = Hop("Centennial", 0.105)
 CHALLENGER            = Hop("Challenger", 0.085)
 CHINOOK               = Hop("Chinook", 0.13)
+CITRA                 = Hop("Citra", 0.13)
 CLUSTER               = Hop("Cluster", 0.065)
 COLUMBUS              = Hop("Columbus", 0.15)
 COMET                 = Hop("Comet", 0.1)
